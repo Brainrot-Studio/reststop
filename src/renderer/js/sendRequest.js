@@ -10,13 +10,30 @@ const axios = require('axios');
  * @returns {Promise<Object>} The response object.
  */
 module.exports = async function sendRequest({ url, method, headers, body }) {
+    const startTime = Date.now(); // start timer
+
     try {
         const response = await axios({ url, method, headers, data: body });
-        return { success: true, status: response.status, statusText: response.statusText, headers: response.headers, url: url,
-            data: response.data
+        const duration = Date.now() - startTime; // end timer
+
+        return {
+            success: true,
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+            url: url,
+            data: response.data,
+            duration // in ms
+        };
+    } catch (error) {
+        const duration = Date.now() - startTime;
+
+        return {
+            success: false,
+            error: error.message,
+            status: error.response?.status,
+            data: error.response?.data,
+            duration
         };
     }
-    catch(error) {
-        return { success: false, error: error.message, status: error.response?.status, data: error.response?.data };
-    }
-}
+};
