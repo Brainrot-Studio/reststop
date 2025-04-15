@@ -30,7 +30,7 @@ You open it, make a request, and get a response. That’s it.
 
 **Check the releases on this repository for current Mac and Windows installers.**
 
-Until then:
+### To run locally:
 
 ```bash
 git clone <this repo>
