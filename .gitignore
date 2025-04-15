@@ -137,3 +137,6 @@ dist
 
 # Releases
 releases/*
+
+# Mac
+*.DS_Store
