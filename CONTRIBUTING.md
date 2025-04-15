@@ -25,7 +25,7 @@ If you're unsure whether an idea fits, open an issue first.
 
 ## Submitting a Pull Request
 
-1. Create a new branch from `main`
+1. Create a new branch from `main`. Make your branch name something descriptive. For example, if you're adding a settings feature, name your branch something like `add-settings-feature`.
 2. Make your changes
 3. Keep commits clean and descriptive
 4. Submit a pull request with a clear explanation
