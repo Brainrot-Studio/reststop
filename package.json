@@ -1,0 +1,29 @@
+{
+  "name": "reststop",
+  "version": "0.0.1",
+  "description": "A minimalistic REST API testing tool.",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brainrot-Studio/reststop.git"
+  },
+  "keywords": [
+    "REST",
+    "API",
+    "Testing"
+  ],
+  "author": "Brainrot Studio, LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Brainrot-Studio/reststop/issues"
+  },
+  "homepage": "https://github.com/Brainrot-Studio/reststop#readme",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "electron": "^35.1.5",
+    "electron-packager": "^17.1.2"
+  }
+}

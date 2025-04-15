@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>RESTStop</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    </head>
+    <body class="bg-zinc-900 text-white min-h-screen font-mono p-6">
+        <div class="flex min-h-screen">
+            <!-- Left sidebar -->
+            <aside id="history-panel"
+                    class="fixed top-4 left-4 w-72 h-[95vh] bg-zinc-900 border border-zinc-700 rounded-lg shadow-lg overflow-y-auto p-4 z-50 space-y-2">
+                <h2 class="text-white text-lg font-bold mb-2">History</h2>
+                <ul id="history-list" class="space-y-2">
+                </ul>
+            </aside>
+          
+            <!-- Main content -->
+            <main class="w-[95vw] ml-auto mr-auto pl-[19rem] pr-6 pt-6">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <h1 class="text-3xl font-bold">🚏 RESTStop</h1>
+        
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input id="url" placeholder="https://api.example.com/data"
+                                class="col-span-3 p-2 rounded bg-zinc-800 border border-zinc-700 focus:outline-none" />
+                        <select id="method"
+                                class="p-2 rounded bg-zinc-800 border border-zinc-700 focus:outline-none">
+                            <option>GET</option>
+                            <option>POST</option>
+                            <option>PUT</option>
+                            <option>DELETE</option>
+                            <option>PATCH</option>
+                        </select>
+                    </div>
+        
+                    <div class="relative">
+                        <textarea id="headers"
+                                  placeholder='Request Headers (JSON format)'
+                                  class="w-full h-32 p-4 pr-20 rounded bg-zinc-800 border border-zinc-700 resize-none font-mono text-sm"
+                        ></textarea>
+                      
+                        <button id="prettify-headers"
+                                class="absolute top-2 right-2 text-xs text-blue-400 bg-zinc-900 border border-zinc-700 px-2 py-0.5 rounded hover:bg-zinc-800 transition">
+                          Prettify
+                        </button>
+                      </div>
+        
+                    <div class="relative">
+                        <textarea id="body"
+                                  placeholder='Request Body (JSON format)'
+                                  class="w-full h-32 p-4 pr-20 rounded bg-zinc-800 border border-zinc-700 resize-none font-mono text-sm"
+                        ></textarea>
+                      
+                        <button id="prettify-body"
+                                class="absolute top-2 right-2 text-xs text-blue-400 bg-zinc-900 border border-zinc-700 px-2 py-0.5 rounded hover:bg-zinc-800 transition">
+                          Prettify
+                        </button>
+                      </div>
+        
+                    <button id="send"
+                            class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold">
+                    Send Request
+                    </button>
+        
+                    <div>
+                        <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+                            <li class="me-2" role="presentation">
+                              <button class="inline-block p-4 rounded-t-lg border-b-2" id="response-tab" data-tabs-target="#response-panel" type="button" role="tab" aria-controls="response" aria-selected="true">Response</button>
+                            </li>
+                            <li class="me-2" role="presentation">
+                              <button class="inline-block p-4 rounded-t-lg border-b-2 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="headers-tab" data-tabs-target="#headers-panel" type="button" role="tab" aria-controls="headers" aria-selected="false">Headers</button>
+                            </li>
+                        </ul>
+                        <div id="myTabContent">
+                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="response-panel" role="tabpanel" aria-labelledby="response-tab">
+                                <pre id="response-output"
+                                class="overflow-auto text-sm">
+                                Waiting for response...
+                           </pre>
+                            </div>
+                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="headers-panel" role="tabpanel" aria-labelledby="headers-tab">
+                                <pre id="headers-output"
+                                class="overflow-auto text-sm">
+                                Waiting for response headers...
+                           </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script src="../js/renderer.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    </body>
+</html>
