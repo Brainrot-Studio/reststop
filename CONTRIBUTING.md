@@ -30,6 +30,20 @@ If you're unsure whether an idea fits, open an issue first.
 3. Keep commits clean and descriptive
 4. Submit a pull request with a clear explanation
 
+Generally, try to keep your PR to a maximum of 10 commits.  You can utilize interactive rebase to squash/fixup related commits, thus reducing the amount of commits.
+If possible, squashing down to 1 descriptive commit would be preferred (reducing the amount of commits to the main branch).  However, if your commits are logically presented a maintainer may not require you to do so.
+
+---
+
+## Rebasing is your friend
+
+- To pull up-to-date code from the main branch into your branch, we prefer the use of rebasing.
+- An example command flow from your branch:
+1. `git fetch --all`
+2. `git rebase origin/main`
+
+From there, resolve any merge conflicts (if there are any), and follow the rebasing instructions presented to you.
+
 ---
 
 ## Code Style
