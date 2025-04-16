@@ -4,6 +4,24 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './assets/icon.icns',
+    name: 'RESTStop',
+    appCategoryType: 'public.app-category.developer-tools'  ,
+    ignore: [
+      /^\/docs/,
+      /^\/tests?/,
+      /^\/\.github/,
+      /^\/node_modules\/\.cache/,
+      /^\/out/,
+      /^\/assets/,
+      /^\/releases/,
+      /\.map$/,
+      /README\.md$/,
+      /CHANGELOG\.md$/,
+      /CONTRIBUTING\.md$/,
+      /LICENSE$/,
+      /.*\.log$/
+    ]
   },
   rebuildConfig: {},
   makers: [
