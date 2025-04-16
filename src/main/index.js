@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron/main');
 const path = require('node:path');
 const sendRequest = require('../renderer/js/sendRequest');
 
-// Initial set up
+// Initial set up.
 app.setName('RESTStop');
 
 function createWindow () {
