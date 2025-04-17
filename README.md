@@ -1,3 +1,12 @@
+<div align="center">
+	<br />
+	<p>
+		<a href="https://discord.gg/xWGZjzMEy8"><img src="https://img.shields.io/discord/799867627148935180?color=5865F2&logo=discord&logoColor=white" alt="Discord server" /></a>
+		<a href="https://github.com/Brainrot-Studio/reststop/commits/main"><img src="https://img.shields.io/github/last-commit/Brainrot-Studio/reststop.svg?logo=github&logoColor=ffffff" alt="Last commit." /></a>
+		<a href="https://github.com/Brainrot-Studio/reststop/graphs/contributors"><img src="https://img.shields.io/github/contributors/Brainrot-Studio/reststop.svg?maxAge=3600&logo=github&logoColor=fff&color=00c7be" alt="contributors" /></a>
+	</p>
+</div>
+
 # RESTStop
 
 A no-BS REST client for developers who just want to send HTTP requests... Without logging in, syncing to the cloud, or navigating five menus to do it.
