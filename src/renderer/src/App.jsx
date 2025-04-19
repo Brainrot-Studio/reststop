@@ -19,9 +19,7 @@ import {
   createTheme,
   ThemeProvider
 } from '@mui/material';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import JsonView from '@uiw/react-json-view';
-import { basicTheme } from '@uiw/react-json-view/basic';
+import MonacoJsonEditor from '../components/MonacoJsonEditor';
 
 const drawerWidth = 300;
 
@@ -59,14 +57,15 @@ const darkTheme = createTheme({
 });
 
 export default function App() {
-  const [tab, setTab] = useState(0);
+  const [requestTab, setRequestTab] = useState(0);
+  const [responseTab, setResponseTab] = useState(0);
   const [history, setHistory] = useState([]);
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
   const [headers, setHeaders] = useState('');
   const [body, setBody] = useState('');
-  const [response, setResponse] = useState('Waiting for response...');
-  const [responseHeaders, setResponseHeaders] = useState('Waiting for response...');
+  const [response, setResponse] = useState('');
+  const [responseHeaders, setResponseHeaders] = useState('');
   const [responseTime, setResponseTime] = useState(null);
 
   useEffect(() => {
@@ -167,45 +166,21 @@ export default function App() {
               ))}
             </Select>
           </Box>
-
-          <Box sx={{ position: 'relative', mb: 2 }}>
-            <TextField
-              label="Headers (JSON)"
-              fullWidth
-              multiline
-              rows={4}
-              value={headers}
-              onChange={(e) => setHeaders(e.target.value)}
-            />
-            <Tooltip title="Prettify">
-              <IconButton
-                onClick={() => handlePrettify('headers')}
-                size="small"
-                sx={{ position: 'absolute', top: 8, right: 8 }}
-              >
-                <FormatAlignLeftIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-
-          <Box sx={{ position: 'relative', mb: 2 }}>
-            <TextField
-              label="Body (JSON)"
-              fullWidth
-              multiline
-              rows={4}
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-            />
-            <Tooltip title="Prettify">
-              <IconButton
-                onClick={() => handlePrettify('body')}
-                size="small"
-                sx={{ position: 'absolute', top: 8, right: 8 }}
-              >
-                <FormatAlignLeftIcon />
-              </IconButton>
-            </Tooltip>
+          <Box sx={{ height: '35%', p: 2, overflow: 'auto' }}>
+            <Tabs value={requestTab} onChange={(e, newVal) => setRequestTab(newVal)}>
+              <Tab label="Headers" />
+              <Tab label="Body" />
+            </Tabs>
+            {requestTab === 0 && (
+              <Box sx={{ position: 'relative', mb: 2, height: '100%' }}>
+                <MonacoJsonEditor value={headers} onChange={setHeaders} height="100%" />
+              </Box>
+            )}
+            {requestTab === 1 && (
+              <Box sx={{ position: 'relative', mb: 2, height: '100%' }}>
+                <MonacoJsonEditor value={body} onChange={setBody} height="100%" />
+              </Box>
+            )}
           </Box>
 
           <Button variant="contained" color="success" onClick={handleSend} sx={{ mb: 4, alignSelf: 'flex-start' }}>
@@ -213,33 +188,23 @@ export default function App() {
           </Button>
 
           <Paper elevation={3} sx={{ height: '40%', p: 2, bgcolor: 'background.paper', overflow: 'auto' }}>
-            <Tabs value={tab} onChange={(e, newVal) => setTab(newVal)}>
+            <Tabs value={responseTab} onChange={(e, newVal) => setResponseTab(newVal)}>
               <Tab label="Response" />
               <Tab label="Headers" />
             </Tabs>
 
-            {tab === 0 && (
+            {responseTab === 0 && (
               <Box mt={2}>
                 <Typography variant="body2" color="text.secondary" mb={1}>
                   ⏱ {responseTime ? `${responseTime} ms` : 'n/a'}
                 </Typography>
-                <JsonView
-                  value={tryParseJson(typeof response === 'string' ? `{ "message": ${JSON.stringify(response)} }` : response)}
-                  style={basicTheme}
-                  displayDataTypes={false}
-                  indentWidth={2}
-                />
+                <MonacoJsonEditor value={JSON.stringify(response, null, 2)} height="200px" readOnly={true} />
               </Box>
             )}
 
-            {tab === 1 && (
+            {responseTab === 1 && (
               <Box mt={2}>
-                <JsonView
-                  value={responseHeaders == '' ? `{ "message": ${JSON.stringify(response)} }` : JSON.parse(responseHeaders)}
-                  style={basicTheme}
-                  displayDataTypes={false}
-                  indentWidth={2}
-                />
+                <MonacoJsonEditor value={JSON.stringify(responseHeaders, null, 2)} height="200px" readOnly={true} />
               </Box>
             )}
           </Paper>

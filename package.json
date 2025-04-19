@@ -7,7 +7,8 @@
     "dev": "vite --config src/renderer/vite.config.js",
     "build": "vite build --config src/renderer/vite.config.js",
     "start": "electron-forge start",
-    "start:dev": "concurrently -k \"vite --config src/renderer/vite.config.js\" \"wait-on http://localhost:5173 && electron .\""
+    "start:dev": "concurrently -k \"vite --config src/renderer/vite.config.js\" \"wait-on http://localhost:5173 && electron .\"",
+    "serve": "scripts/build.sh"
   },
   "repository": {
     "type": "git",
