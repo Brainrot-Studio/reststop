@@ -5,8 +5,10 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 # Build the react project
 cd $DIR/../src/renderer
+npm i
 npm run build
 
 # Start the electron project
 cd ../
+npm i
 npm run start
