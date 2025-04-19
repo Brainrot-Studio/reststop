@@ -41,9 +41,18 @@ You open it, make a request, and get a response. That’s it.
 
 ### To run locally:
 
+To run only the react app when doing UI development:
 ```bash
-git clone <this repo>
+git clone git@github.com:Brainrot-Studio/reststop.git
+cd reststop/src/renderer
+npm install
+npm run dev
+```
+
+To build the electron app to test full functionality:
+```bash
+git clone git@github.com:Brainrot-Studio/reststop.git
 cd reststop
 npm install
-npm run start
+./scripts/build
 ```
