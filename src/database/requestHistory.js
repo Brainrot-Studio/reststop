@@ -2,6 +2,10 @@ const Datastore = require('@seald-io/nedb');
 const path = require('node:path');
 
 module.exports = new class Database {
+  /**
+   * Creates a database object.
+   * @returns {Database} the database singleton
+   */
   constructor() {
     if (Database.instance) return Database.instance;
 
@@ -12,6 +16,12 @@ module.exports = new class Database {
     Database.instance = this;
   }
 
+  /**
+   * Adds an entry to the user's history save file
+   * @param {Object} req The request options object.
+   * @param {Object} res The response data.
+   * @returns {Promise<Boolean>} The response object.
+  */
   async addHistory({ req, res }) {
     const _id = Date.now();
     try {
@@ -23,6 +33,10 @@ module.exports = new class Database {
     }
   }
 
+  /**
+   * Gets all of a user's request history
+   * @returns {Promise<Object[]>} The response object.
+  */
   async getHistory() {
     try {
       return await this.history.findAsync({}).sort({ date: -1 });
