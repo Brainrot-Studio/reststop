@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/Brainrot-Studio/reststop#readme",
   "dependencies": {
+    "@seald-io/nedb": "^4.1.1",
     "axios": "^1.8.4",
     "electron-packager": "^17.1.2",
     "electron-squirrel-startup": "^1.0.1"

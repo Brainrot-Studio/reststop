@@ -14,12 +14,11 @@ import {
   Tabs,
   Tab,
   Paper,
-  Tooltip,
-  IconButton,
   createTheme,
   ThemeProvider
 } from '@mui/material';
 import MonacoJsonEditor from '../components/MonacoJsonEditor';
+import HistorySidebar from '../components/HistorySidebar';
 
 const drawerWidth = 300;
 
@@ -68,8 +67,9 @@ export default function App() {
   const [responseHeaders, setResponseHeaders] = useState('');
   const [responseTime, setResponseTime] = useState(null);
 
-  useEffect(() => {
-    const data = window.RESTStopAPI?.getHistory?.();
+  useEffect(async () => {
+    const data = await window.DatabaseAPI?.getHistory?.() || [];
+    console.log(`data: ${JSON.stringify(data)}`);
     if (data) setHistory(data);
   }, []);
 
@@ -78,15 +78,6 @@ export default function App() {
       return JSON.parse(str);
     } catch {
       return str;
-    }
-  };
-
-  const handlePrettify = (target) => {
-    try {
-      if (target === 'headers') setHeaders(JSON.stringify(JSON.parse(headers), null, 2));
-      if (target === 'body') setBody(JSON.stringify(JSON.parse(body), null, 2));
-    } catch (err) {
-      alert('Invalid JSON');
     }
   };
 
@@ -104,20 +95,25 @@ export default function App() {
     if (result.success) {
       setResponse(result.data);
       setResponseHeaders(JSON.stringify(result.headers, null, 2));
-      const newEntry = { url, method, headers, body };
-      window.RESTStopAPI?.saveToHistory?.(newEntry);
+      const newEntry = { date: new Date(), req: { url, method, headers, body }, 
+      res: { status: result.status, duration: result.duration, headers: result.headers, body: result.data, statusText: result.statusText } };
+      window.DatabaseAPI?.addHistory?.(newEntry);
       setHistory([newEntry, ...history]);
     } else {
+      const newEntry = { date: new Date(), req: { url, method, headers, body }, 
+      res: { status: result.status, duration: result.duration, headers: '', body: result.error, statusText: '' } };
+      window.DatabaseAPI?.addHistory?.(newEntry);
+      setHistory([newEntry, ...history]);
       setResponse({ error: result.error });
       setResponseHeaders('');
     }
   };
 
   const loadFromHistory = (entry) => {
-    setUrl(entry.url);
-    setMethod(entry.method);
-    setHeaders(entry.headers);
-    setBody(entry.body);
+    setUrl(entry.req.url);
+    setMethod(entry.req.method);
+    setHeaders(entry.req.headers);
+    setBody(entry.req.body);
   };
 
   return (
@@ -133,16 +129,7 @@ export default function App() {
             borderRight: '1px solid #333'
           }}
         >
-          <Typography variant="h6" mb={2}>History</Typography>
-          <List>
-            {history.map((item, idx) => (
-              <ListItem key={idx} disablePadding>
-                <ListItemButton onClick={() => loadFromHistory(item)}>
-                  <ListItemText primary={`${item.method} ${item.url}`} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          <HistorySidebar history={history} onClick={loadFromHistory} />
         </Box>
 
         <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: 4 }}>
@@ -187,24 +174,24 @@ export default function App() {
             Send Request
           </Button>
 
-          <Paper elevation={3} sx={{ height: '40%', p: 2, bgcolor: 'background.paper', overflow: 'auto' }}>
+          <Paper elevation={3} sx={{ height: '30%', p: 2, bgcolor: 'background.paper', overflow: 'auto' }}>
             <Tabs value={responseTab} onChange={(e, newVal) => setResponseTab(newVal)}>
               <Tab label="Response" />
               <Tab label="Headers" />
             </Tabs>
 
             {responseTab === 0 && (
-              <Box mt={2}>
+              <Box sx={{ position: 'relative', mb: 2, height: '75%' }}>
                 <Typography variant="body2" color="text.secondary" mb={1}>
                   ⏱ {responseTime ? `${responseTime} ms` : 'n/a'}
                 </Typography>
-                <MonacoJsonEditor value={JSON.stringify(response, null, 2)} height="200px" readOnly={true} />
+                <MonacoJsonEditor value={JSON.stringify(response, null, 2)} height="100%" readOnly={true} />
               </Box>
             )}
 
             {responseTab === 1 && (
-              <Box mt={2}>
-                <MonacoJsonEditor value={JSON.stringify(responseHeaders, null, 2)} height="200px" readOnly={true} />
+              <Box sx={{ position: 'relative', mb: 2, height: '75%' }}>
+                <MonacoJsonEditor value={JSON.stringify(responseHeaders, null, 2)} height="100%" readOnly={true} />
               </Box>
             )}
           </Paper>
