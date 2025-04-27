@@ -139,7 +139,7 @@ export default function App() {
           <HistorySidebar history={history} onClick={loadFromHistory} />
         </Box>
 
-        <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: 4 }}>
+        <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: 4, pt: 6 }}>
           <Typography variant="h4" fontWeight="bold" mb={4}>🚏 RESTStop</Typography>
 
           <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>

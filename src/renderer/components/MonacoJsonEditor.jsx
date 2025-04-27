@@ -19,7 +19,8 @@ export default function MonacoJsonEditor({
         scrollBeyondLastLine: false,
         lineNumbers: 'on',
         wordWrap: 'on',
-        tabSize: 2
+        tabSize: 2,
+        padding: { top: 16 }
       }}
       onChange={(val) => onChange?.(val || '')}
     />
