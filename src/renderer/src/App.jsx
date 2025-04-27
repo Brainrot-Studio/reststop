@@ -1,5 +1,5 @@
 // src/renderer/src/App.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -15,8 +15,11 @@ import {
   Tab,
   Paper,
   createTheme,
-  ThemeProvider
+  ThemeProvider,
+  IconButton,
+  Tooltip
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import MonacoJsonEditor from '../components/MonacoJsonEditor';
 import HistorySidebar from '../components/HistorySidebar';
 
@@ -66,6 +69,8 @@ export default function App() {
   const [response, setResponse] = useState('');
   const [responseHeaders, setResponseHeaders] = useState('');
   const [responseTime, setResponseTime] = useState(null);
+  const [customLogo, setCustomLogo] = useState('/reststopsign.png');
+  const fileInputRef = useRef(null);
 
   // useEffect(async () => {
   //   const data = await window.DatabaseAPI?.getHistory?.() || [];
@@ -123,6 +128,27 @@ export default function App() {
     setBody(entry.req.body);
   };
 
+  const handleLogoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomLogo(e.target.result);
+        // Optionally save to localStorage for persistence
+        localStorage.setItem('customLogo', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Load saved logo from localStorage if available
+  useEffect(() => {
+    const savedLogo = localStorage.getItem('customLogo');
+    if (savedLogo) {
+      setCustomLogo(savedLogo);
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={darkTheme}>
       <Box sx={{ display: 'flex', bgcolor: 'background.default', color: 'text.primary', height: '100vh', width: '100vw', overflow: 'hidden' }}>
@@ -133,19 +159,75 @@ export default function App() {
             bgcolor: 'background.paper',
             p: 2,
             overflowY: 'auto',
-            borderRight: '1px solid #333'
+            borderRight: '1px solid #333',
+            display: { xs: 'none', sm: 'block' }
           }}
         >
           <HistorySidebar history={history} onClick={loadFromHistory} />
         </Box>
 
-        <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: 4, pt: 6 }}>
-          <Typography variant="h4" fontWeight="bold" mb={4}>🚏 RESTStop</Typography>
+        <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: { xs: 2, sm: 3, md: 4 }, pt: { xs: 3, sm: 4, md: 6 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 3, md: 4 } }}>
+            <Box 
+              sx={{ 
+                width: { xs: 32, sm: 40 }, 
+                height: { xs: 32, sm: 40 }, 
+                mr: 0, 
+                bgcolor: 'transparent', 
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                position: 'relative',
+                cursor: 'pointer'
+              }}
+              onClick={() => fileInputRef.current.click()}
+            >
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/*"
+                onChange={handleLogoChange}
+              />
+              <img 
+                src={customLogo} 
+                alt="RESTStop Logo" 
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'contain',
+                  background: 'transparent'
+                }} 
+              />
+              <Box 
+                sx={{ 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  right: 0, 
+                  bottom: 0, 
+                  backgroundColor: 'rgba(0,0,0,0.5)', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  opacity: 0,
+                  transition: 'opacity 0.2s',
+                  '&:hover': { opacity: 1 }
+                }}
+              >
+                <EditIcon sx={{ color: 'white', fontSize: 18 }} />
+              </Box>
+            </Box>
+            <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.2rem' } }}>RESTStop</Typography>
+          </Box>
 
           <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
             <TextField
               label="URL"
               variant="outlined"
+              size="small"
               fullWidth
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -153,14 +235,16 @@ export default function App() {
             <Select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              sx={{ minWidth: 120 }}
+              size="small"
+              sx={{ minWidth: { xs: 80, sm: 120 } }}
             >
               {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((m) => (
                 <MenuItem key={m} value={m}>{m}</MenuItem>
               ))}
             </Select>
           </Box>
-          <Box sx={{ height: '35%', p: 2, overflow: 'auto' }}>
+          
+          <Box sx={{ height: { xs: '30vh', sm: '35vh' }, minHeight: '150px', p: 1, overflow: 'auto' }}>
             <Tabs value={requestTab} onChange={(e, newVal) => setRequestTab(newVal)}>
               <Tab label="Headers" />
               <Tab label="Body" />
@@ -177,11 +261,30 @@ export default function App() {
             )}
           </Box>
 
-          <Button variant="contained" color="success" onClick={handleSend} sx={{ mb: 4, alignSelf: 'flex-start' }}>
-            Send Request
-          </Button>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'flex-start', 
+            mt: 1.5,
+            mb: 2, 
+            mx: 1
+          }}>
+            <Button 
+              variant="contained" 
+              color="success" 
+              onClick={handleSend} 
+              size="small"
+              sx={{ 
+                px: { xs: 2, sm: 3 },
+                py: { xs: 0.8, sm: 1.2 },
+                borderRadius: 2,
+                fontWeight: 600
+              }}
+            >
+              Send Request
+            </Button>
+          </Box>
 
-          <Paper elevation={3} sx={{ height: '30%', p: 2, bgcolor: 'background.paper', overflow: 'auto' }}>
+          <Paper elevation={3} sx={{ height: { xs: '30vh', sm: '30vh' }, minHeight: '150px', p: 1, bgcolor: 'background.paper', overflow: 'auto' }}>
             <Tabs value={responseTab} onChange={(e, newVal) => setResponseTab(newVal)}>
               <Tab label="Response" />
               <Tab label="Headers" />
