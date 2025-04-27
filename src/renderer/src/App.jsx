@@ -65,8 +65,9 @@ export default function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchSomething(); // Assuming this exists or you will update it
-      setData(data);
+      const data = await window.DatabaseAPI?.getHistory?.() || [];
+      console.log(`data: ${JSON.stringify(data)}`);
+      if (data) setHistory(data);
     }
     fetchData();
   }, []);
