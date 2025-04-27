@@ -67,10 +67,13 @@ export default function App() {
   const [responseHeaders, setResponseHeaders] = useState('');
   const [responseTime, setResponseTime] = useState(null);
 
-  useEffect(async () => {
-    const data = await window.DatabaseAPI?.getHistory?.() || [];
-    console.log(`data: ${JSON.stringify(data)}`);
-    if (data) setHistory(data);
+  useEffect(() => {
+    async function fetchData() {
+      const data = await window.DatabaseAPI?.getHistory?.() || [];
+      console.log(`data: ${JSON.stringify(data)}`);
+      if (data) setHistory(data);
+    }
+    fetchData();
   }, []);
 
   const tryParseJson = (str) => {
