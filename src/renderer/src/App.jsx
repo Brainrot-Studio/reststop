@@ -1,5 +1,5 @@
 // src/renderer/src/App.jsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react'; // <-- removed useRef
 import {
   Box,
   Typography,
@@ -7,19 +7,12 @@ import {
   Select,
   MenuItem,
   Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
   Tabs,
   Tab,
   Paper,
   createTheme,
-  ThemeProvider,
-  IconButton,
-  Tooltip
+  ThemeProvider
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import MonacoJsonEditor from '../components/MonacoJsonEditor';
 import HistorySidebar from '../components/HistorySidebar';
 
@@ -69,17 +62,10 @@ export default function App() {
   const [response, setResponse] = useState('');
   const [responseHeaders, setResponseHeaders] = useState('');
   const [responseTime, setResponseTime] = useState(null);
-  const [customLogo, setCustomLogo] = useState('/reststopsign.png');
-  const fileInputRef = useRef(null);
 
-  // useEffect(async () => {
-  //   const data = await window.DatabaseAPI?.getHistory?.() || [];
-  //   console.log(`data: ${JSON.stringify(data)}`);
-  //   if (data) setHistory(data);
-  // }, []);
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchSomething();
+      const data = await fetchSomething(); // Assuming this exists or you will update it
       setData(data);
     }
     fetchData();
@@ -107,13 +93,19 @@ export default function App() {
     if (result.success) {
       setResponse(result.data);
       setResponseHeaders(JSON.stringify(result.headers, null, 2));
-      const newEntry = { date: new Date(), req: { url, method, headers, body }, 
-      res: { status: result.status, duration: result.duration, headers: result.headers, body: result.data, statusText: result.statusText } };
+      const newEntry = { 
+        date: new Date(), 
+        req: { url, method, headers, body }, 
+        res: { status: result.status, duration: result.duration, headers: result.headers, body: result.data, statusText: result.statusText }
+      };
       window.DatabaseAPI?.addHistory?.(newEntry);
       setHistory([newEntry, ...history]);
     } else {
-      const newEntry = { date: new Date(), req: { url, method, headers, body }, 
-      res: { status: result.status, duration: result.duration, headers: '', body: result.error, statusText: '' } };
+      const newEntry = { 
+        date: new Date(), 
+        req: { url, method, headers, body }, 
+        res: { status: result.status, duration: result.duration, headers: '', body: result.error, statusText: '' }
+      };
       window.DatabaseAPI?.addHistory?.(newEntry);
       setHistory([newEntry, ...history]);
       setResponse({ error: result.error });
@@ -127,27 +119,6 @@ export default function App() {
     setHeaders(entry.req.headers);
     setBody(entry.req.body);
   };
-
-  const handleLogoChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setCustomLogo(e.target.result);
-        // Optionally save to localStorage for persistence
-        localStorage.setItem('customLogo', e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Load saved logo from localStorage if available
-  useEffect(() => {
-    const savedLogo = localStorage.getItem('customLogo');
-    if (savedLogo) {
-      setCustomLogo(savedLogo);
-    }
-  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -168,61 +139,32 @@ export default function App() {
 
         <Box component="main" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', p: { xs: 2, sm: 3, md: 4 }, pt: { xs: 3, sm: 4, md: 6 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 3, md: 4 } }}>
+            {/* Clean static logo */}
             <Box 
               sx={{ 
                 width: { xs: 32, sm: 40 }, 
                 height: { xs: 32, sm: 40 }, 
-                mr: 0, 
+                mr: 2, 
                 bgcolor: 'transparent', 
                 borderRadius: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                overflow: 'hidden',
-                position: 'relative',
-                cursor: 'pointer'
+                overflow: 'hidden'
               }}
-              onClick={() => fileInputRef.current.click()}
             >
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                accept="image/*"
-                onChange={handleLogoChange}
-              />
               <img 
-                src={customLogo} 
+                src="/assets/reststop-new-icon.png"  // Your colorful new logo!
                 alt="RESTStop Logo" 
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain',
-                  background: 'transparent'
-                }} 
+                style={{ width: '100%', height: '100%', objectFit: 'contain', background: 'transparent' }}
               />
-              <Box 
-                sx={{ 
-                  position: 'absolute', 
-                  top: 0, 
-                  left: 0, 
-                  right: 0, 
-                  bottom: 0, 
-                  backgroundColor: 'rgba(0,0,0,0.5)', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  opacity: 0,
-                  transition: 'opacity 0.2s',
-                  '&:hover': { opacity: 1 }
-                }}
-              >
-                <EditIcon sx={{ color: 'white', fontSize: 18 }} />
-              </Box>
             </Box>
-            <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.2rem' } }}>RESTStop</Typography>
+            <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.2rem' } }}>
+              RESTStop
+            </Typography>
           </Box>
 
+          {/* URL and Method */}
           <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
             <TextField
               label="URL"
@@ -243,7 +185,8 @@ export default function App() {
               ))}
             </Select>
           </Box>
-          
+
+          {/* Request Editors */}
           <Box sx={{ height: { xs: '30vh', sm: '35vh' }, minHeight: '150px', p: 1, overflow: 'auto' }}>
             <Tabs value={requestTab} onChange={(e, newVal) => setRequestTab(newVal)}>
               <Tab label="Headers" />
@@ -261,13 +204,8 @@ export default function App() {
             )}
           </Box>
 
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'flex-start', 
-            mt: 1.5,
-            mb: 2, 
-            mx: 1
-          }}>
+          {/* Send Request Button */}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1.5, mb: 2, mx: 1 }}>
             <Button 
               variant="contained" 
               color="success" 
@@ -284,6 +222,7 @@ export default function App() {
             </Button>
           </Box>
 
+          {/* Response Viewer */}
           <Paper elevation={3} sx={{ height: { xs: '30vh', sm: '30vh' }, minHeight: '150px', p: 1, bgcolor: 'background.paper', overflow: 'auto' }}>
             <Tabs value={responseTab} onChange={(e, newVal) => setResponseTab(newVal)}>
               <Tab label="Response" />
@@ -298,7 +237,6 @@ export default function App() {
                 <MonacoJsonEditor value={JSON.stringify(response, null, 2)} height="100%" readOnly={true} />
               </Box>
             )}
-
             {responseTab === 1 && (
               <Box sx={{ position: 'relative', mb: 2, height: '75%' }}>
                 <MonacoJsonEditor value={JSON.stringify(responseHeaders, null, 2)} height="100%" readOnly={true} />
