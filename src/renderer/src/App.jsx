@@ -155,7 +155,7 @@ export default function App() {
               }}
             >
               <img 
-                src="/assets/reststop-new-icon.png"  // Your colorful new logo!
+                src="/reststopsign.png" 
                 alt="RESTStop Logo" 
                 style={{ width: '100%', height: '100%', objectFit: 'contain', background: 'transparent' }}
               />
