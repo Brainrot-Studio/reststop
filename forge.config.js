@@ -4,9 +4,9 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
-    icon: './assets/icon.icns',
+    icon: path.resolve(__dirname, './reststopsign.png'),
     name: 'RESTStop',
-    appCategoryType: 'public.app-category.developer-tools'  ,
+    appCategoryType: 'public.app-category.developer-tools',
     ignore: [
       /^\/docs/,
       /^\/tests?/,
