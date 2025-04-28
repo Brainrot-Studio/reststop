@@ -155,7 +155,7 @@ export default function App() {
               }}
             >
               <img 
-                src="/reststopsign.png" 
+                src="../public/reststopsign.png" 
                 alt="RESTStop Logo" 
                 style={{ width: '100%', height: '100%', objectFit: 'contain', background: 'transparent' }}
               />
